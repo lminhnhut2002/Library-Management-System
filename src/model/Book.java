@@ -17,8 +17,9 @@ public class Book {
     }
 
     // GETTER for Book ID 
-    public String getBookID() {
-        return bookID;
+ public String getBookID() {
+    return bookID;
+}
     }
 
     // SETTER for Book ID
