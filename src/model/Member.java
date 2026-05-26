@@ -10,4 +10,19 @@ package model;
  */
 public class Member {
     
+    private String memberID;
+    // CONSTRUCTOR
+    public Member(String memberID) {
+        this.memberID = memberID;
+    }
+    // GETTER for Member ID 
+    public String getMemberID() {
+        return memberID;
+    }
+
+    // SETTER for Member ID
+    public void setMemberID(String memberID) {
+        this.memberID = memberID;
+    }
 }
+
