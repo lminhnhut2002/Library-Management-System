@@ -48,4 +48,4 @@ public class RegularMember extends Member {
     }
 }
     
-}
+
