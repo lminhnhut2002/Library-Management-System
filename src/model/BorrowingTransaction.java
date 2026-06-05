@@ -36,6 +36,13 @@ public class BorrowingTransaction {
         this.returned = returned;
     }
 
+    public BorrowingTransaction(String transactionID, String bookID, String memberID, LocalDate borrowDate) {
+        this.transactionID = transactionID;
+        this.bookID = bookID;
+        this.memberID = memberID;
+        this.borrowDate = borrowDate;
+    }
+
     public String getTranscationID() {
         return transactionID;
     }
