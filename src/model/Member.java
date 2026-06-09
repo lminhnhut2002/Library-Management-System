@@ -15,14 +15,14 @@ public abstract class Member {
     private String phone;
     private String email;
 
-<<<<<<< HEAD
+
     // 2. Constructor
     public Member() {
     }
 
     // 3. Constructor 
-=======
->>>>>>> 35bec7689b44a61993e6d19bad9de9ecb21670d7
+
+
     public Member(String memberID, String name, String phone, String email) {
         this.memberID = memberID;
         this.name = name;
@@ -38,10 +38,10 @@ public abstract class Member {
         this.memberID = memberID;
     }
 
-<<<<<<< HEAD
+
     // 5. Getter & Setter for Name
-=======
->>>>>>> 35bec7689b44a61993e6d19bad9de9ecb21670d7
+
+
     public String getName() {
         return name;
     }
@@ -50,10 +50,8 @@ public abstract class Member {
         this.name = name;
     }
 
-<<<<<<< HEAD
     // 6. Getter & Setter for Phone
-=======
->>>>>>> 35bec7689b44a61993e6d19bad9de9ecb21670d7
+
     public String getPhone() {
         return phone;
     }
@@ -62,10 +60,9 @@ public abstract class Member {
         this.phone = phone;
     }
 
-<<<<<<< HEAD
+
     // 7. Getter & Setter for Email
-=======
->>>>>>> 35bec7689b44a61993e6d19bad9de9ecb21670d7
+
     public String getEmail() {
         return email;
     }

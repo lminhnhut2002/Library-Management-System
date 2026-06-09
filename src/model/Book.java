@@ -29,6 +29,10 @@ public class Book {
         this.borrowCount = borrowCount;
     }
 
+    public Book(String bookID, String title, String author, String genre, int year, int quantity) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     
 
     public String getBookID() {

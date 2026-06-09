@@ -5,6 +5,7 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.List;
 import model.Book;
 import utils.Validation;
 
@@ -121,5 +122,21 @@ public class BookService {
 
         }
         return result;
+    }
+
+    public List<Book> searchBooks(String keyword) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public List<Book> getAllBooks() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public boolean updateBook(String bookID, String newTitle, String newGenre, int newYear) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public Book getBookById(String bookID) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
