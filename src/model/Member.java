@@ -8,19 +8,21 @@ package model;
  *
  * @author NHUT
  */
-public class Member {
+public abstract class Member {
 
-    
-   private String memberID;
+    private String memberID;
     private String name;
     private String phone;
     private String email;
 
+<<<<<<< HEAD
     // 2. Constructor
     public Member() {
     }
 
     // 3. Constructor 
+=======
+>>>>>>> 35bec7689b44a61993e6d19bad9de9ecb21670d7
     public Member(String memberID, String name, String phone, String email) {
         this.memberID = memberID;
         this.name = name;
@@ -28,7 +30,6 @@ public class Member {
         this.email = email;
     }
 
-    // 4. Getter & Setter cho Member ID
     public String getMemberID() {
         return memberID;
     }
@@ -37,7 +38,10 @@ public class Member {
         this.memberID = memberID;
     }
 
+<<<<<<< HEAD
     // 5. Getter & Setter for Name
+=======
+>>>>>>> 35bec7689b44a61993e6d19bad9de9ecb21670d7
     public String getName() {
         return name;
     }
@@ -46,7 +50,10 @@ public class Member {
         this.name = name;
     }
 
+<<<<<<< HEAD
     // 6. Getter & Setter for Phone
+=======
+>>>>>>> 35bec7689b44a61993e6d19bad9de9ecb21670d7
     public String getPhone() {
         return phone;
     }
@@ -55,7 +62,10 @@ public class Member {
         this.phone = phone;
     }
 
+<<<<<<< HEAD
     // 7. Getter & Setter for Email
+=======
+>>>>>>> 35bec7689b44a61993e6d19bad9de9ecb21670d7
     public String getEmail() {
         return email;
     }
@@ -64,10 +74,15 @@ public class Member {
         this.email = email;
     }
 
+    public abstract int getBorrowLimit();
+
+    public abstract double calculateFine(int overdueDays);
+
+    public abstract String getType();
+
     public void displayInfo() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        System.out.printf("%-8s %-20s %-15s %-25s %-10s %-5d\n",
+                memberID, name, phone, email, getType(), getBorrowLimit());
     }
+
 }
-
-
-    

@@ -2,18 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package main;
-import ui.MainMenu;
-
+package ui;
 
 /**
  *
  * @author NHUT
  */
-public class Main {
-    public static void main(String[] args) {
-        MainMenu menu = new MainMenu();
-        menu.show();
-    }
+public class BookMenu {
     
 }
