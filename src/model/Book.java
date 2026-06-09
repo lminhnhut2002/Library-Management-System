@@ -123,4 +123,20 @@ public void displayInfo(){
     System.out.printf("%-8s %-25s %-20s %-15s %-6d %-8d %-8d\n",
             bookID,title,author,genre,year,quantity,borrowCount);
 }
+
+    /**
+     *
+     * @author ACER
+     */
+    public static abstract class PremiumMember extends Member {
+
+        public PremiumMember(String memberID, String name, String phone, String email) {
+            super(memberID, name, phone, email);
+        }
+
+        @Override
+        public int getBorrowLimit() {
+            return 5;
+        }
+    }
 }

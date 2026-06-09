@@ -58,7 +58,11 @@ private final BookService bookService = new BookService(listBook); // Truyền l
                     break;
                     
                 case 2:
-                    System.out.println("Tính năng Quản lý Thành viên đang phát triển...");
+                    // Khởi tạo menu quản lý thành viên
+                    MemberMenu memberMenu = new MemberMenu();
+                    // Hiển thị menu quản lý thành viên
+                    memberMenu.displayMenu();
+
                     break;
                     
                 case 3:
@@ -78,4 +82,5 @@ private final BookService bookService = new BookService(listBook); // Truyền l
             }
         } while (choice != 5);
     }
+    
 }

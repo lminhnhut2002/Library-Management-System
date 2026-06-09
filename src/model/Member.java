@@ -68,8 +68,8 @@ public abstract class Member {
     }
 
     public void setEmail(String email) {
-        this.email = email;
-    }
+        this.email = email;}
+    
 
     public abstract int getBorrowLimit();
 
