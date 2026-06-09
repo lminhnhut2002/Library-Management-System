@@ -16,11 +16,11 @@ public class Member {
     private String phone;
     private String email;
 
-    // 2. Constructor rỗng (No-argument constructor)
+    // 2. Constructor
     public Member() {
     }
 
-    // 3. Constructor có đầy đủ tham số
+    // 3. Constructor 
     public Member(String memberID, String name, String phone, String email) {
         this.memberID = memberID;
         this.name = name;
@@ -37,7 +37,7 @@ public class Member {
         this.memberID = memberID;
     }
 
-    // 5. Getter & Setter cho Name
+    // 5. Getter & Setter for Name
     public String getName() {
         return name;
     }
@@ -46,7 +46,7 @@ public class Member {
         this.name = name;
     }
 
-    // 6. Getter & Setter cho Phone
+    // 6. Getter & Setter for Phone
     public String getPhone() {
         return phone;
     }
@@ -55,7 +55,7 @@ public class Member {
         this.phone = phone;
     }
 
-    // 7. Getter & Setter cho Email
+    // 7. Getter & Setter for Email
     public String getEmail() {
         return email;
     }
