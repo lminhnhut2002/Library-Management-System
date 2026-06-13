@@ -1,95 +1,289 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package ui;
+
 import java.util.Scanner;
 import model.Member;
-import model.RegularMember;
 import model.PremiumMember;
+import model.RegularMember;
 import service.MemberService;
 
-/**
- *
- * @author ACER
- */
 public class MemberMenu {
-    
 
+    private final Scanner sc = new Scanner(System.in);
+    private final MemberService service = new MemberService();
 
-
-
-
-    Scanner sc = new Scanner(System.in);
-    MemberService service = new MemberService();
-
+    // ================= ADD MEMBER =================
     public void addMember() {
 
-        System.out.print("Enter ID: ");
-        String id = sc.nextLine();
+        String id;
 
-        System.out.print("Enter Name: ");
-        String name = sc.nextLine();
+        while (true) {
 
-        System.out.print("Enter Phone: ");
-        String phone = sc.nextLine();
+            System.out.print("Enter ID (M001): ");
+            id = sc.nextLine().trim();
 
-        System.out.print("Enter Email: ");
-        String email = sc.nextLine();
+            if (!service.isValidMemberId(id)) {
+                System.out.println("Invalid ID format! Example: M001");
+                continue;
+            }
 
-        System.out.println("1. Regular");
-        System.out.println("2. Premium");
+            if (service.existsMemberId(id)) {
+                System.out.println("Member ID already exists!");
+                continue;
+            }
 
-        int type = Integer.parseInt(sc.nextLine());
+            break;
+        }
+
+        String name;
+
+        do {
+            System.out.print("Enter Name: ");
+            name = sc.nextLine();
+
+            if (!service.isValidName(name)) {
+                System.out.println("Invalid Name!");
+            }
+
+        } while (!service.isValidName(name));
+
+        String phone;
+
+        do {
+            System.out.print("Enter Phone: ");
+            phone = sc.nextLine();
+
+            if (!service.isValidPhone(phone)) {
+                System.out.println("Invalid Phone!");
+            }
+
+        } while (!service.isValidPhone(phone));
+
+        String email;
+
+        do {
+            System.out.print("Enter Email: ");
+            email = sc.nextLine();
+
+            if (!service.isValidEmail(email)) {
+                System.out.println("Invalid Email!");
+            }
+
+        } while (!service.isValidEmail(email));
+
+        int type;
+
+        while (true) {
+
+            try {
+
+                System.out.println("1. Regular Member");
+                System.out.println("2. Premium Member");
+                System.out.print("Choose Type: ");
+
+                type = Integer.parseInt(sc.nextLine());
+
+                if (type == 1 || type == 2) {
+                    break;
+                }
+
+            } catch (Exception e) {
+            }
+
+            System.out.println("Please choose 1 or 2.");
+        }
 
         Member member;
 
-        if(type == 1){
+        if (type == 1) {
             member = new RegularMember(id, name, phone, email);
         } else {
             member = new PremiumMember(id, name, phone, email);
         }
 
-       service.addMember(member);
+        if (service.addMember(member)) {
+            System.out.println("Member added successfully!");
+        }
     }
 
-    public void displayMenu() {
+    // ================= FIND ID =================
+    public void findById() {
 
-    int choice;
+        System.out.print("Enter Member ID: ");
+        String id = sc.nextLine();
 
-    do {
-        System.out.println("\n================================");
-        System.out.println("      MEMBER MANAGEMENT");
-        System.out.println("================================");
-        System.out.println("1. Add Member");
-        System.out.println("2. View Members");
-        System.out.println("0. Back");
-        System.out.print("Choose: ");
+        Member member = service.findById(id);
 
-        choice = Integer.parseInt(sc.nextLine());
+        if (member == null) {
+            System.out.println("Member not found!");
+        } else {
+            member.displayInfo();
+        }
+    }
 
-        switch(choice) {
+    // ================= FIND NAME =================
+    public void findByName() {
 
-            case 1:
-                addMember();
-                break;
+        System.out.print("Enter Name: ");
+        String name = sc.nextLine();
 
-            case 2:
-                service.viewAllMembers();
-                break;
+        Member member = service.findByName(name);
 
-            case 0:
-                System.out.println("Back to Main Menu...");
-                break;
+        if (member == null) {
+            System.out.println("Member not found!");
+        } else {
+            member.displayInfo();
+        }
+    }
 
-            default:
-                System.out.println("Invalid choice!");
+    // ================= SEARCH KEYWORD =================
+    public void searchByKeyword() {
+
+        System.out.print("Enter Keyword: ");
+        String keyword = sc.nextLine();
+
+        service.searchByKeyword(keyword);
+    }
+
+    // ================= UPDATE =================
+    public void updateMember() {
+
+        System.out.print("Enter Member ID: ");
+        String id = sc.nextLine();
+
+        Member member = service.findById(id);
+
+        if (member == null) {
+            System.out.println("Member not found!");
+            return;
         }
 
-    } while(choice != 0);
-}
-}
+        System.out.print("New Name: ");
+        String name = sc.nextLine();
 
-    
-    
+        System.out.print("New Phone: ");
+        String phone = sc.nextLine();
 
+        System.out.print("New Email: ");
+        String email = sc.nextLine();
+
+        if (!service.isValidName(name)) {
+            System.out.println("Invalid Name!");
+            return;
+        }
+
+        if (!service.isValidPhone(phone)) {
+            System.out.println("Invalid Phone!");
+            return;
+        }
+
+        if (!service.isValidEmail(email)) {
+            System.out.println("Invalid Email!");
+            return;
+        }
+
+        if (service.updateMember(id, name, phone, email)) {
+            System.out.println("Update successful!");
+        }
+    }
+
+    // ================= DELETE =================
+    public void deleteMember() {
+
+        System.out.print("Enter Member ID: ");
+        String id = sc.nextLine();
+
+        if (service.removeMember(id)) {
+            System.out.println("Delete successful!");
+        } else {
+            System.out.println("Member not found!");
+        }
+    }
+
+    // ================= MENU =================
+    public void displayMenu() {
+
+        int choice;
+
+        do {
+
+            System.out.println("\n====================================");
+            System.out.println("        MEMBER MANAGEMENT");
+            System.out.println("====================================");
+            System.out.println("1. Add Member");
+            System.out.println("2. View All Members");
+            System.out.println("3. Find Member By ID");
+            System.out.println("4. Find Member By Name");
+            System.out.println("5. Search By Keyword");
+            System.out.println("6. Update Member");
+            System.out.println("7. Remove Member");
+            System.out.println("8. Sort By Name");
+            System.out.println("9. Sort By ID");
+            System.out.println("10. Count Members");
+            System.out.println("0. Back");
+            System.out.print("Choose: ");
+
+            try {
+                choice = Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException e) {
+                choice = -1;
+            }
+
+            switch (choice) {
+
+                case 1:
+                    addMember();
+                    break;
+
+                case 2:
+                    service.viewAllMembers();
+                    break;
+
+                case 3:
+                    findById();
+                    break;
+
+                case 4:
+                    findByName();
+                    break;
+
+                case 5:
+                    searchByKeyword();
+                    break;
+
+                case 6:
+                    updateMember();
+                    break;
+
+                case 7:
+                    deleteMember();
+                    break;
+
+                case 8:
+                    service.sortByName();
+                    System.out.println("Sorted by Name.");
+                    service.viewAllMembers();
+                    break;
+
+                case 9:
+                    service.sortById();
+                    System.out.println("Sorted by ID.");
+                    service.viewAllMembers();
+                    break;
+
+                case 10:
+                    System.out.println(
+                            "Total Members: "
+                            + service.getTotalMembers());
+                    break;
+
+                case 0:
+                    System.out.println("Back to Main Menu...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+
+        } while (choice != 0);
+    }
+}
