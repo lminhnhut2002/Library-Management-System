@@ -56,10 +56,10 @@ public class BookMenu {
                         System.out.println("Returning to Main Menu...");
                         break;
                     default:
-                        System.out.println("❌ Invalid option. Please choose between 0 and 5.");
+                        System.out.println(" Invalid option. Please choose between 0 and 5.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("❌ Error: Invalid Input. Please enter a number.");
+                System.out.println(" Error: Invalid Input. Please enter a number.");
                 choice = -1;
             }
         } while (choice != 0);
@@ -72,28 +72,28 @@ public class BookMenu {
         System.out.print("Book ID (e.g., BK123456): ");
         String bookID = scanner.nextLine().trim();
         if (!Validation.checkBookID(bookID)) { 
-            System.out.println("❌ Fail: Invalid Book ID. Must start with 'BK' followed by 6-8 digits.");
+            System.out.println(" Fail: Invalid Book ID. Must start with 'BK' followed by 6-8 digits.");
             return;
         }
 
         System.out.print("Title: ");
         String title = scanner.nextLine().trim();
         if (Validation.isEmpty(title)) {
-            System.out.println("❌ Fail: Title cannot be empty.");
+            System.out.println("Fail: Title cannot be empty.");
             return;
         }
         
         System.out.print("Author: ");
         String author = scanner.nextLine().trim();
         if (Validation.isEmpty(author)) {
-            System.out.println("❌ Fail: Author cannot be empty.");
+            System.out.println("Fail: Author cannot be empty.");
             return;
         }
         
         System.out.print("Genre: ");
         String genre = scanner.nextLine().trim();
         if (Validation.isEmpty(genre)) {
-            System.out.println("❌ Fail: Genre cannot be empty.");
+            System.out.println("Fail: Genre cannot be empty.");
             return;
         }
         
@@ -112,13 +112,13 @@ public class BookMenu {
             
             // ĐÃ SỬA: Bọc lệnh này vào trong khối try-catch để xử lý "throws Exception" của hàm addBook gốc
             bookService.addBook(newBook); 
-            System.out.println("🎉 Book added successfully!");
+            System.out.println(" Book added successfully!");
             
         } catch (NumberFormatException e) {
-            System.out.println("❌ Fail: Year and Quantity must be valid integers.");
+            System.out.println(" Fail: Year and Quantity must be valid integers.");
         } catch (Exception e) {
             // Bắt và hiển thị thông báo lỗi (ví dụ: trùng ID, sai năm...) được ném từ BookService
-            System.out.println("❌ Fail: " + e.getMessage()); 
+            System.out.println(" Fail: " + e.getMessage()); 
         }
     }
 
@@ -129,14 +129,14 @@ public class BookMenu {
         String bookID = scanner.nextLine().trim();
 
         if (!Validation.checkBookID(bookID)) {
-            System.out.println("❌ Fail: Invalid Book ID format.");
+            System.out.println("Fail: Invalid Book ID format.");
             return;
         }
 
         // Gọi hàm findByID gốc của bạn để kiểm tra xem sách có tồn tại không
         Book existingBook = bookService.findByID(bookID); 
         if (existingBook == null) {
-            System.out.println("❌ Error: Book Not Found.");
+            System.out.println(" Error: Book Not Found.");
             return;
         }
 
@@ -162,12 +162,12 @@ public class BookMenu {
             
             //  Truyền đủ 6 tham số và bọc trong try-catch
             bookService.updateBook(bookID, newTitle, newAuthor, newGenre, newYear, newQuantity);
-            System.out.println("🎉 Book updated successfully!");
+            System.out.println("Book updated successfully!");
             
         } catch (NumberFormatException e) {
-            System.out.println("❌ Fail: Year and Quantity must be valid integers.");
+            System.out.println(" Fail: Year and Quantity must be valid integers.");
         } catch (Exception e) {
-            System.out.println("❌ Fail: " + e.getMessage());
+            System.out.println(" Fail: " + e.getMessage());
         }
     }
 
@@ -178,16 +178,16 @@ public class BookMenu {
         String bookID = scanner.nextLine().trim();
 
         if (!Validation.checkBookID(bookID)) {
-            System.out.println("❌ Fail: Invalid Book ID format.");
+            System.out.println("Fail: Invalid Book ID format.");
             return;
         }
 
         try {
             // Gọi hàm removeBook(bookID) gốc của bạn và xử lý Exception nếu không tìm thấy sách
             bookService.removeBook(bookID); 
-            System.out.println("🎉 Book removed successfully!");
+            System.out.println("Book removed successfully!");
         } catch (Exception e) {
-            System.out.println("❌ Error: " + e.getMessage()); 
+            System.out.println("Error: " + e.getMessage()); 
         }
     }
 
@@ -218,7 +218,7 @@ public class BookMenu {
         String keyword = scanner.nextLine().trim();
 
         if (Validation.isEmpty(keyword)) {
-            System.out.println("❌ Fail: Keyword cannot be empty.");
+            System.out.println(" Fail: Keyword cannot be empty.");
             return;
         }
 
@@ -226,11 +226,11 @@ public class BookMenu {
         ArrayList<Book> foundBooks = bookService.searchBook(keyword);
 
         if (foundBooks == null || foundBooks.isEmpty()) {
-            System.out.println("❌ No books found matching the keyword.");
+            System.out.println(" No books found matching the keyword.");
             return;
         }
 
-        System.out.println("\n🔍 Found " + foundBooks.size() + " book(s):");
+        System.out.println("\n Found " + foundBooks.size() + " book(s):");
         System.out.printf("%-10s %-30s %-20s %-15s %-6s %-8s\n", 
                 "ID", "Title", "Author", "Genre", "Year", "Stock");
         System.out.println("-----------------------------------------------------------------------------------------");
