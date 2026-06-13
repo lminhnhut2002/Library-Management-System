@@ -10,6 +10,7 @@ import java.util.HashMap;
 import model.Book;
 import model.Member;
 import model.BorrowingTransaction;
+
 public class ReportService {
 
     private ArrayList<Book> books;
@@ -26,7 +27,7 @@ public class ReportService {
 
     // Chức năng hiển thị sách quá hạn
     public void showOverdueBooks() {
-        System.out.println("\n===== DANH SACH SACH QUA HAN =====");
+        System.out.println("\n===== OVERDUE BOOKS LIST =====");
 
         boolean found = false;
         LocalDate today = LocalDate.now();
@@ -42,13 +43,13 @@ public class ReportService {
         }
 
         if (!found) {
-            System.out.println("Khong co sach qua han.");
+            System.out.println("No overdue books found.");
         }
     }
 
     // Chức năng hiển thị sách đang được mượn
     public void showBorrowedBooks() {
-        System.out.println("\n===== DANH SACH SACH DANG MUON =====");
+        System.out.println("\n===== BORROWED BOOKS LIST =====");
 
         boolean found = false;
 
@@ -60,16 +61,16 @@ public class ReportService {
         }
 
         if (!found) {
-            System.out.println("Khong co sach dang duoc muon.");
+            System.out.println("No books are currently borrowed.");
         }
     }
 
     // Chức năng hiển thị sách được mượn nhiều nhất
     public void showMostPopularBooks() {
-        System.out.println("\n===== SACH DUOC MUON NHIEU NHAT =====");
+        System.out.println("\n===== MOST POPULAR BOOK =====");
 
         if (books.isEmpty()) {
-            System.out.println("Danh sach sach rong.");
+            System.out.println("The book list is empty.");
             return;
         }
 
@@ -82,7 +83,7 @@ public class ReportService {
         }
 
         if (maxBook.getBorrowCount() == 0) {
-            System.out.println("Chua co sach nao duoc muon.");
+            System.out.println("No book has been borrowed yet.");
         } else {
             maxBook.displayInfo();
         }
@@ -90,10 +91,10 @@ public class ReportService {
 
     // Chức năng hiển thị thành viên mượn sách nhiều nhất
     public void showTopBorrowingMembers() {
-        System.out.println("\n===== THANH VIEN MUON SACH NHIEU NHAT =====");
+        System.out.println("\n===== TOP BORROWING MEMBERS =====");
 
         if (transactions.isEmpty()) {
-            System.out.println("Chua co giao dich muon sach.");
+            System.out.println("There are no borrowing transactions.");
             return;
         }
 
@@ -124,13 +125,13 @@ public class ReportService {
 
             if (countMap.containsKey(id) && countMap.get(id) == max) {
                 m.displayInfo();
-                System.out.println("So lan muon: " + max);
+                System.out.println("Number of borrowings: " + max);
                 found = true;
             }
         }
 
         if (!found) {
-            System.out.println("Khong tim thay thanh vien muon sach.");
+            System.out.println("No borrowing member found.");
         }
     }
 
@@ -147,11 +148,11 @@ public class ReportService {
             }
         }
 
-        System.out.println("\n===== THONG KE TONG QUAN =====");
-        System.out.println("Tong so sach: " + books.size());
-        System.out.println("Tong so thanh vien: " + members.size());
-        System.out.println("Tong so giao dich: " + transactions.size());
-        System.out.println("So sach dang muon: " + borrowingCount);
-        System.out.println("So sach da tra: " + returnedCount);
+        System.out.println("\n===== GENERAL SUMMARY =====");
+        System.out.println("Total books: " + books.size());
+        System.out.println("Total members: " + members.size());
+        System.out.println("Total transactions: " + transactions.size());
+        System.out.println("Currently borrowed books: " + borrowingCount);
+        System.out.println("Returned books: " + returnedCount);
     }
 }
