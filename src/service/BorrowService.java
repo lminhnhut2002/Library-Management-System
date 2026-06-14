@@ -55,10 +55,23 @@ public class BorrowService {
     }
 
     public void borrowBook(String memberID, String bookID, LocalDate borrowDate) throws Exception {
+
+        if (Validation.isEmpty(memberID)) {
+            throw new Exception("Member ID null.");
+        }
+        if (!Validation.isValidID(memberID)) {
+            throw new Exception("Member ID Invalid.");
+        }
         Member member = findByMemberID(memberID);
         if (member == null) {
             throw new Exception("Member not found.");
 
+        }
+        if (Validation.isEmpty(bookID)) {
+            throw new Exception("Book ID null.");
+        }
+        if (!Validation.checkBookID(bookID)) {
+            throw new Exception("Book ID Invalid.");
         }
 
         Book book = findByBookID(bookID);
@@ -83,12 +96,26 @@ public class BorrowService {
         BorrowingTransaction t = new BorrowingTransaction(transactionID, bookID, memberID, borrowDate);
         transactions.add(t);
         book.borrowBook();
+
     }
 
     public double returnBook(String memberID, String bookID, LocalDate returnDate) throws Exception {
+        if (Validation.isEmpty(memberID)) {
+            throw new Exception("Member ID cannot be empty.");
+        }
+        if (!Validation.isValidID(memberID)) {
+            throw new Exception("Invalid member ID");
+        }
         Member member = findByMemberID(memberID);
         if (member == null) {
             throw new Exception("Member not found.");
+        }
+
+        if (Validation.isEmpty(bookID)) {
+            throw new Exception("Book ID cannot be empty.");
+        }
+        if (!Validation.checkBookID(bookID)) {
+            throw new Exception("Invalid member ID");
         }
         Book book = findByBookID(bookID);
         if (book == null) {
@@ -121,6 +148,7 @@ public class BorrowService {
 
         return fine;
     }
+    
 
     public ArrayList<BorrowingTransaction> getCurrentBorrowedBooks() {
         ArrayList<BorrowingTransaction> result = new ArrayList<>();
@@ -133,11 +161,19 @@ public class BorrowService {
         return result;
     }
 
-    public ArrayList<BorrowingTransaction> getBorrowingHistory(String memberID) throws Exception {
+   public ArrayList<BorrowingTransaction> getBorrowingHistory(String memberID) throws Exception {
 
         ArrayList<BorrowingTransaction> result = new ArrayList<>();
-        if (findByMemberID(memberID) == null) {
-          throw new Exception("Member not found.");
+        if (Validation.isEmpty(memberID)) {
+            throw new Exception("Member ID cannot be empty.");
+
+        }
+        if (!Validation.isValidID(memberID)) {
+                throw new Exception("Invalid Member ID.");
+            }
+        Member member = findByMemberID(memberID);
+        if(member == null){
+            throw new Exception("Member ID not found.");
         }
         for (BorrowingTransaction t : transactions) {
             if (t.getMemberID().equalsIgnoreCase(memberID)) {
@@ -146,5 +182,4 @@ public class BorrowService {
         }
         return result;
     }
-
 }

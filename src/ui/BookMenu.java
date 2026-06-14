@@ -1,243 +1,183 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package ui;
-import model.Book;
-import service.BookService;
-import utils.Validation;
+
 import java.util.ArrayList;
 import java.util.Scanner;
+import model.Book;
+import service.BookService;
+import service.BorrowService;
+import utils.FileUtils;
+import model.BorrowingTransaction;
 
-/**
- *
- * @author NHUT
- */
 public class BookMenu {
-    private final BookService bookService;
-    private final Scanner scanner; 
 
-    public BookMenu(BookService bookService) {
+    private Scanner sc;
+    private BookService bookService;
+    private BorrowService borrowService;
+
+    public BookMenu(Scanner sc, BookService bookService, BorrowService borrowService) {
+        this.sc = sc;
         this.bookService = bookService;
-        this.scanner = new Scanner(System.in);
+        this.borrowService = borrowService;
     }
 
-    public void displayMenu() {
+    public void show() {
         int choice;
+
         do {
-            System.out.println("\n=== 1. BOOK MANAGEMENT ===");
+            System.out.println("\n----------- MANAGE BOOKS -----------");
             System.out.println("1. Add Book");
             System.out.println("2. Update Book");
             System.out.println("3. Remove Book");
             System.out.println("4. View All Books");
             System.out.println("5. Search Book");
-            System.out.println("0. Back to Main Menu");
-            System.out.print("Choose an option: ");
-            
+            System.out.println("6. Back");
+            System.out.print("Choose: ");
             try {
-                choice = Integer.parseInt(scanner.nextLine().trim());
-                switch (choice) {
-                    case 1:
-                        addBookForm();
-                        break;
-                    case 2:
-                        updateBookForm();
-                        break;
-                    case 3:
-                        removeBookForm();
-                        break;
-                    case 4:
-                        viewAllBooksForm();
-                        break;
-                    case 5:
-                        searchBookForm();
-                        break;
-                    case 0:
-                        System.out.println("Returning to Main Menu...");
-                        break;
-                    default:
-                        System.out.println(" Invalid option. Please choose between 0 and 5.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println(" Error: Invalid Input. Please enter a number.");
+                choice = Integer.parseInt(sc.nextLine());
+            } catch (Exception e) {
                 choice = -1;
             }
-        } while (choice != 0);
+
+            try {
+                switch (choice) {
+                    case 1:
+                        addBook();
+                        break;
+                    case 2:
+                        updateBook();
+                        break;
+                    case 3:
+                        removeBook();
+                        break;
+                    case 4:
+                        displayBooks(bookService.getBooks());
+                        break;
+                    case 5:
+                        searchBook();
+                        break;
+                    case 6:
+                        break;
+                    default:
+                        System.out.println("Invalid option.");
+                }
+            } catch (Exception e) {
+                System.out.println("Fail: " + e.getMessage());
+            }
+
+        } while (choice != 6);
     }
 
-    // 1. Chức năng Add Book
-    private void addBookForm() {
-        System.out.println("\n--- Add Book ---");
-        
-        System.out.print("Book ID (e.g., BK123456): ");
-        String bookID = scanner.nextLine().trim();
-        if (!Validation.checkBookID(bookID)) { 
-            System.out.println(" Fail: Invalid Book ID. Must start with 'BK' followed by 6-8 digits.");
-            return;
-        }
-
+    private void addBook() throws Exception {
+        System.out.println("----------- ADD BOOK -----------");
+        System.out.print("Book ID: ");
+        String id = sc.nextLine();
         System.out.print("Title: ");
-        String title = scanner.nextLine().trim();
-        if (Validation.isEmpty(title)) {
-            System.out.println("Fail: Title cannot be empty.");
-            return;
-        }
-        
+        String title = sc.nextLine();
         System.out.print("Author: ");
-        String author = scanner.nextLine().trim();
-        if (Validation.isEmpty(author)) {
-            System.out.println("Fail: Author cannot be empty.");
-            return;
-        }
-        
+        String author = sc.nextLine();
         System.out.print("Genre: ");
-        String genre = scanner.nextLine().trim();
-        if (Validation.isEmpty(genre)) {
-            System.out.println("Fail: Genre cannot be empty.");
-            return;
-        }
-        
+        String genre = sc.nextLine();
         System.out.print("Publication Year: ");
-        String yearStr = scanner.nextLine().trim();
-        
-        System.out.print("New Quantity: ");
-        String quantityStr = scanner.nextLine().trim();
+        int year = Integer.parseInt(sc.nextLine());
+        System.out.print("Quantity: ");
+        int quantity = Integer.parseInt(sc.nextLine());
 
-        try {
-            int year = Integer.parseInt(yearStr);
-            int quantity = Integer.parseInt(quantityStr);
+        System.out.print("[1] Save [2] Cancel: ");
+        String confirm = sc.nextLine();
 
-            // Tạo đối tượng Book từ thông tin nhập vào
-            Book newBook = new Book(bookID, title, author, genre, year, quantity);
-            
-            // ĐÃ SỬA: Bọc lệnh này vào trong khối try-catch để xử lý "throws Exception" của hàm addBook gốc
-            bookService.addBook(newBook); 
-            System.out.println(" Book added successfully!");
-            
-        } catch (NumberFormatException e) {
-            System.out.println(" Fail: Year and Quantity must be valid integers.");
-        } catch (Exception e) {
-            // Bắt và hiển thị thông báo lỗi (ví dụ: trùng ID, sai năm...) được ném từ BookService
-            System.out.println(" Fail: " + e.getMessage()); 
+        if (confirm.equals("1")) {
+            bookService.addBook(new Book(id, title, author, genre, year, quantity));
+            System.out.println("Book added successfully.");
+        } else {
+            System.out.println("Cancelled.");
         }
     }
 
-    // 2. Chức năng Update Book
-    private void updateBookForm() {
-        System.out.println("\n--- Update Book ---");
-        System.out.print("Enter Book ID (need update): ");
-        String bookID = scanner.nextLine().trim();
+    private void updateBook() throws Exception {
+        System.out.println("----------- UPDATE BOOK -----------");
+        System.out.print("Enter Book ID: ");
+        String id = sc.nextLine();
 
-        if (!Validation.checkBookID(bookID)) {
-            System.out.println("Fail: Invalid Book ID format.");
-            return;
+        Book b = bookService.findByID(id);
+        if (b == null) {
+            throw new Exception("Book not found.");
         }
 
-        // Gọi hàm findByID gốc của bạn để kiểm tra xem sách có tồn tại không
-        Book existingBook = bookService.findByID(bookID); 
-        if (existingBook == null) {
-            System.out.println(" Error: Book Not Found.");
-            return;
-        }
+        System.out.println("Current Information:");
+        displayHeader();
+        b.displayInfo();
+        System.out.println("(Leave blank and press ENTER to skip updating that field)");
 
-        //  Nhập đầy đủ thông tin gồm cả Author và Quantity để truyền cho hàm updateBook 6 tham số
         System.out.print("New Title: ");
-        String newTitle = scanner.nextLine().trim();
+        String title = sc.nextLine();
         
         System.out.print("New Author: ");
-        String newAuthor = scanner.nextLine().trim();
+        String author = sc.nextLine();
         
         System.out.print("New Genre: ");
-        String newGenre = scanner.nextLine().trim();
+        String genre = sc.nextLine();
         
         System.out.print("New Publication Year: ");
-        String newYearStr = scanner.nextLine().trim();
+        String yearInput = sc.nextLine();
+        int year = yearInput.trim().isEmpty() ? -1 : Integer.parseInt(yearInput);
         
         System.out.print("New Quantity: ");
-        String newQuantityStr = scanner.nextLine().trim();
+        String qtyInput = sc.nextLine();
+        int quantity = qtyInput.trim().isEmpty() ? -1 : Integer.parseInt(qtyInput);
 
-        try {
-            int newYear = Integer.parseInt(newYearStr);
-            int newQuantity = Integer.parseInt(newQuantityStr);
-            
-            //  Truyền đủ 6 tham số và bọc trong try-catch
-            bookService.updateBook(bookID, newTitle, newAuthor, newGenre, newYear, newQuantity);
-            System.out.println("Book updated successfully!");
-            
-        } catch (NumberFormatException e) {
-            System.out.println(" Fail: Year and Quantity must be valid integers.");
-        } catch (Exception e) {
-            System.out.println(" Fail: " + e.getMessage());
+        System.out.print("[1] Update [2] Cancel: ");
+        String confirm = sc.nextLine();
+
+        if (confirm.equals("1")) {
+            bookService.updateBook(id, title, author, genre, year, quantity);
+            System.out.println("Book updated successfully.");
+        } else {
+            System.out.println("Cancelled.");
         }
     }
 
-    // 3. Chức năng Remove Book
-    private void removeBookForm() {
-        System.out.println("\n--- Remove Book ---");
-        System.out.print("Enter Book ID (Sách cần xóa): ");
-        String bookID = scanner.nextLine().trim();
+    private void removeBook() throws Exception {
+        System.out.println("----------- REMOVE BOOK -----------");
+        System.out.print("Enter Book ID: ");
+        String id = sc.nextLine();
 
-        if (!Validation.checkBookID(bookID)) {
-            System.out.println("Fail: Invalid Book ID format.");
-            return;
+        if (bookService.findByID(id) == null) {
+            throw new Exception("Book not found.");
         }
 
-        try {
-            // Gọi hàm removeBook(bookID) gốc của bạn và xử lý Exception nếu không tìm thấy sách
-            bookService.removeBook(bookID); 
-            System.out.println("Book removed successfully!");
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage()); 
+        if (!borrowService.getCurrentBorrowedBooks().isEmpty()) {
+            for (BorrowingTransaction t : borrowService.getCurrentBorrowedBooks()) {
+                if (t.getBookID().equalsIgnoreCase(id)) {
+                    throw new Exception("Cannot remove. Book is currently borrowed.");
+                }
+            }
         }
+
+        bookService.removeBook(id);
+        System.out.println("Book removed successfully.");
     }
 
-    // 4. Chức năng View All Books
-    private void viewAllBooksForm() {
-        System.out.println("\n--- View All Books ---");
-        // Gọi hàm getBooks() trả về ArrayList<Book> 
-        ArrayList<Book> books = bookService.getBooks(); 
-
-        if (books == null || books.isEmpty()) {
-            System.out.println("No books available in the library.");
-            return;
-        }
-
-        System.out.printf("%-10s %-30s %-20s %-15s %-6s %-8s\n", 
-                "ID", "Title", "Author", "Genre", "Year", "Stock");
-        System.out.println("-----------------------------------------------------------------------------------------");
-        
-        for (Book book : books) {
-            book.displayInfo(); 
-        }
-    }
-
-    // 5. Chức năng Search Book
-    private void searchBookForm() {
-        System.out.println("\n--- Search Book ---");
+    private void searchBook() {
         System.out.print("Enter title / author / genre: ");
-        String keyword = scanner.nextLine().trim();
+        String keyword = sc.nextLine();
+        displayBooks(bookService.searchBooks(keyword));
+    }
 
-        if (Validation.isEmpty(keyword)) {
-            System.out.println(" Fail: Keyword cannot be empty.");
-            return;
+    public void displayBooks(ArrayList<Book> books) {
+        System.out.println("----------- BOOK LIST -----------");
+        displayHeader();
+
+        for (Book b : books) {
+            b.displayInfo();
         }
 
-        // Gọi chính xác hàm searchBook(keyword) trả về ArrayList<Book> 
-        ArrayList<Book> foundBooks = bookService.searchBook(keyword);
+        System.out.print("Press ENTER to return...");
+        sc.nextLine();
+    }
 
-        if (foundBooks == null || foundBooks.isEmpty()) {
-            System.out.println(" No books found matching the keyword.");
-            return;
-        }
-
-        System.out.println("\n Found " + foundBooks.size() + " book(s):");
-        System.out.printf("%-10s %-30s %-20s %-15s %-6s %-8s\n", 
-                "ID", "Title", "Author", "Genre", "Year", "Stock");
-        System.out.println("-----------------------------------------------------------------------------------------");
-        
-        for (Book book : foundBooks) {
-            book.displayInfo();
-        }
+   private void displayHeader() {
+        System.out.printf("%-6s %-25s %-22s %-12s %-6s %-4s\n",
+                "ID", "Title", "Author", "Genre", "Year", "Qty");
+        System.out.println("--------------------------------------------------------------------------------");
     }
 }
-

@@ -1,15 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package utils;
 
-/**
- *
- * @author NHUT
- */
 public class Validation {
-//có thể áp dụng cho title ,author,...
 
     public static boolean isEmpty(String s) {
         return s == null || s.trim().isEmpty();
@@ -30,21 +21,37 @@ public class Validation {
     }
 
     public static boolean checkQuantity(int quantity) {
-        return quantity > 0;
+        return quantity >= 0; // Sửa lại >= 0 vì khi mượn hết sách, quantity có thể bằng 0
     }
 
+    // Đề bài: M001, M002 -> Chữ M đầu theo sau là các chữ số
     public static boolean isValidID(String id) {
-        return !isEmpty(id)
-                && id.matches("^SE\\d{6,8}$");
+        return !isEmpty(id) && id.matches("^[Mm]\\d+$");
     }
 
+    // Đề bài: B001, B002 -> Chữ B đầu theo sau là các chữ số
     public static boolean checkBookID(String bookID) {
-        return !isEmpty(bookID)
-                && bookID.matches("^BK\\d{6,8}$");
-
+        return !isEmpty(bookID) && bookID.matches("^[Bb]\\d+$");
     }
 
     public static boolean checkYear(int year) {
         return year > 0 && year <= java.time.Year.now().getValue();
+    }
+    
+    public static String toTitleCase(String text) {
+        if (isEmpty(text)) {
+            return text;
+        }
+
+        String[] words = text.trim().toLowerCase().split("\\s+");
+        StringBuilder result = new StringBuilder();
+
+        for (String word : words) {
+            result.append(Character.toUpperCase(word.charAt(0)))
+                  .append(word.substring(1))
+                  .append(" ");
+        }
+
+        return result.toString().trim();
     }
 }
