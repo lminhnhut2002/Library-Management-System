@@ -15,8 +15,14 @@ public class PremiumMember extends Member {
     public double calculateFine(int overdueDays) {
         return overdueDays * 3000;
     }
+
     @Override
-public String getType() {
-    return "Premium";
-}
+    public String getType() {
+        return "Premium";
+    }
+
+    @Override
+    public int getNumberDaysBorrow() {
+        return 14;
+    }
 }

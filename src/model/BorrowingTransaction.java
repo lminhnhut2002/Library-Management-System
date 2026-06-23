@@ -17,13 +17,13 @@ public class BorrowingTransaction {
     private double fine;
     private boolean returned;
 
-    public BorrowingTransaction(String transactionID, String bookID, String memberID, LocalDate borrowDate) {
+    public BorrowingTransaction(String transactionID, String bookID, String memberID, LocalDate borrowDate,int NumberDaysBorrow) {
         this.transactionID = transactionID;
         this.bookID = bookID;
         this.memberID = memberID;
         this.borrowDate = borrowDate;
 
-        this.dueDate = borrowDate.plusDays(7);
+        this.dueDate = borrowDate.plusDays(NumberDaysBorrow);
         this.returnDate = null;
         this.fine = 0;
         this.returned = false;

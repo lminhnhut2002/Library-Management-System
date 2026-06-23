@@ -93,7 +93,7 @@ public class BorrowService {
         }
 
         String transactionID = "T" + (transactions.size() + 1);
-        BorrowingTransaction t = new BorrowingTransaction(transactionID, bookID, memberID, borrowDate);
+        BorrowingTransaction t = new BorrowingTransaction(transactionID, bookID, memberID, borrowDate,member.getNumberDaysBorrow());
         transactions.add(t);
         book.borrowBook();
 
