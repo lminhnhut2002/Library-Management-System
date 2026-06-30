@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.Scanner;
+
 public class Validation {
 
     public static boolean isEmpty(String s) {
@@ -37,7 +39,7 @@ public class Validation {
     public static boolean checkYear(int year) {
         return year > 0 && year <= java.time.Year.now().getValue();
     }
-    
+
     public static String toTitleCase(String text) {
         if (isEmpty(text)) {
             return text;
@@ -48,10 +50,19 @@ public class Validation {
 
         for (String word : words) {
             result.append(Character.toUpperCase(word.charAt(0)))
-                  .append(word.substring(1))
-                  .append(" ");
+                    .append(word.substring(1))
+                    .append(" ");
         }
 
         return result.toString().trim();
+    }
+    // cài đặt khi input
+    public static String inputRequired(Scanner sc, String message, String fieldName) throws Exception {
+        System.out.print(message);
+        String input = sc.nextLine().trim();
+        if (input.isEmpty()) {
+            throw new Exception(fieldName + " cannot be empty.");
+        }
+        return input;
     }
 }

@@ -56,22 +56,10 @@ public class BorrowService {
 
     public void borrowBook(String memberID, String bookID, LocalDate borrowDate) throws Exception {
 
-        if (Validation.isEmpty(memberID)) {
-            throw new Exception("Member ID null.");
-        }
-        if (!Validation.isValidID(memberID)) {
-            throw new Exception("Member ID Invalid.");
-        }
         Member member = findByMemberID(memberID);
         if (member == null) {
             throw new Exception("Member not found.");
 
-        }
-        if (Validation.isEmpty(bookID)) {
-            throw new Exception("Book ID null.");
-        }
-        if (!Validation.checkBookID(bookID)) {
-            throw new Exception("Book ID Invalid.");
         }
 
         Book book = findByBookID(bookID);
@@ -93,30 +81,19 @@ public class BorrowService {
         }
 
         String transactionID = "T" + (transactions.size() + 1);
-        BorrowingTransaction t = new BorrowingTransaction(transactionID, bookID, memberID, borrowDate,member.getNumberDaysBorrow());
+        BorrowingTransaction t = new BorrowingTransaction(transactionID, bookID, memberID, borrowDate, member.getNumberDaysBorrow());
         transactions.add(t);
         book.borrowBook();
 
     }
 
     public double returnBook(String memberID, String bookID, LocalDate returnDate) throws Exception {
-        if (Validation.isEmpty(memberID)) {
-            throw new Exception("Member ID cannot be empty.");
-        }
-        if (!Validation.isValidID(memberID)) {
-            throw new Exception("Invalid member ID");
-        }
+
         Member member = findByMemberID(memberID);
         if (member == null) {
             throw new Exception("Member not found.");
         }
 
-        if (Validation.isEmpty(bookID)) {
-            throw new Exception("Book ID cannot be empty.");
-        }
-        if (!Validation.checkBookID(bookID)) {
-            throw new Exception("Invalid member ID");
-        }
         Book book = findByBookID(bookID);
         if (book == null) {
             throw new Exception("Book not found.");
@@ -139,6 +116,9 @@ public class BorrowService {
         if (returnDate.isBefore(target.getBorrowDate())) {
             throw new Exception("Return date cannot be before borrow date.");
         }
+        if (returnDate.isAfter(LocalDate.now())) {
+            throw new Exception("Return Date Fail.");
+        }
 
         int overdueDays = target.getOverdueDays(returnDate);
         double fine = member.calculateFine(overdueDays);
@@ -148,7 +128,6 @@ public class BorrowService {
 
         return fine;
     }
-    
 
     public ArrayList<BorrowingTransaction> getCurrentBorrowedBooks() {
         ArrayList<BorrowingTransaction> result = new ArrayList<>();
@@ -161,18 +140,12 @@ public class BorrowService {
         return result;
     }
 
-   public ArrayList<BorrowingTransaction> getBorrowingHistory(String memberID) throws Exception {
+    public ArrayList<BorrowingTransaction> getBorrowingHistory(String memberID) throws Exception {
 
         ArrayList<BorrowingTransaction> result = new ArrayList<>();
-        if (Validation.isEmpty(memberID)) {
-            throw new Exception("Member ID cannot be empty.");
 
-        }
-        if (!Validation.isValidID(memberID)) {
-                throw new Exception("Invalid Member ID.");
-            }
         Member member = findByMemberID(memberID);
-        if(member == null){
+        if (member == null) {
             throw new Exception("Member ID not found.");
         }
         for (BorrowingTransaction t : transactions) {
@@ -181,5 +154,11 @@ public class BorrowService {
             }
         }
         return result;
+    }
+
+    public void displayBookHeader() {
+        System.out.printf("%-6s %-25s %-22s %-17s %-6s %-4s\n",
+                "ID", "Title", "Author", "Genre", "PublicYear", "Quantity");
+        System.out.println("-----------------------------------------------------------------------");
     }
 }
