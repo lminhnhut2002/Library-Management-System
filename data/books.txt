@@ -1,5 +1,5 @@
 B001|Clean Code|Robert C. Martin|Programming|2008|5|0
 B002|Effective Java|Joshua Bloch|Programming|2018|4|0
 B003|The Pragmatic Programmer|Andrew Hunt|Programming|1999|3|0
-B004|Design Patterns|Erich Gamma|Software Engineering|1994|2|0
-B005|Introduction to Algorithms|Thomas H. Cormen|Computer Science|2022|6|0
+B004|Design Patterns|Erich Gamma|Software|1994|2|0
+B005|Algorithms Thomas|Thomas H. Cormen|Com.science|2022|6|0
