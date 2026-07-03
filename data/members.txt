@@ -1,2 +1,5 @@
-Regular|M001|Le Minh Nhut|0797710098|lminhnhut07@gmail.com
-Premium|M002|Dang Tran Anh Tuyet|0834623456|ascbsdvcb@gmail.com
+Regular|SE200001|Nguyen Van An|0901234567|an@gmail.com
+Premium|SE200002|Tran Thi Binh|0912345678|binh@gmail.com
+Regular|SE200003|Le Minh Duc|0923456789|duc@gmail.com
+Premium|SE200004|Pham Thu Ha|0934567890|ha@gmail.com
+Regular|SE200005|Hoang Gia Bao|0945678901|bao@gmail.com

@@ -1,2 +1,5 @@
-B001|Chan Troi Sang Tao|Le Minh Nhut|Ngu Van|123|344|7
-B002|Nguoi Con Gai Nam Xuong|Dang Tran Anh Tuyet|Ngu Van|2022|121|2
+B001|Clean Code|Robert C. Martin|Programming|2008|5|0
+B002|Effective Java|Joshua Bloch|Programming|2018|4|0
+B003|The Pragmatic Programmer|Andrew Hunt|Programming|1999|3|0
+B004|Design Patterns|Erich Gamma|Software Engineering|1994|2|0
+B005|Introduction to Algorithms|Thomas H. Cormen|Computer Science|2022|6|0

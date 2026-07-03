@@ -59,13 +59,14 @@ public abstract class Member {
     public abstract double calculateFine(int overdueDays);
 
     public abstract String getType();
+
     public abstract int getNumberDaysBorrow();
+
     public abstract double getFeeExtendDueDate(int extraDays);
-    
+
     public String toFileString() {
-    return getType() + "|" + memberID + "|" + name + "|" + phone + "|" + email;
-}
-    
+        return getType() + "|" + memberID + "|" + name + "|" + phone + "|" + email;
+    }
 
     public void displayInfo() {
         System.out.printf("%-8s %-20s %-15s %-25s %-10s %-5d\n",
