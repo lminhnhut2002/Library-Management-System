@@ -25,4 +25,9 @@ public class PremiumMember extends Member {
     public int getNumberDaysBorrow() {
         return 14;
     }
+
+    @Override
+    public double getFeeExtendDueDate(int extraDays) {
+        return extraDays * 3000;
+    }
 }

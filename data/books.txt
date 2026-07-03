@@ -1,2 +1,2 @@
-B001|Chan Troi Sang Tao|Le Minh Nhut|Ngu Van|123|344|1
-B002|Nguoi Con Gai Nam Xuong|Dang Tran Anh Tuyet|Ngu Van|2022|123|0
+B001|Chan Troi Sang Tao|Le Minh Nhut|Ngu Van|123|344|7
+B002|Nguoi Con Gai Nam Xuong|Dang Tran Anh Tuyet|Ngu Van|2022|121|2

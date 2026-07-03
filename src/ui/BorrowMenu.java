@@ -29,7 +29,11 @@ public class BorrowMenu {
             System.out.println("2. Return Book");
             System.out.println("3. View Borrowed Books");
             System.out.println("4. Borrowing History");
-            System.out.println("5. Back");
+            System.out.println("5. Extend the due date");
+            System.out.println("6. Cancel Book Borrowing");
+            System.out.println("7. Books Near Due Date");
+            System.out.println("8. Return All Borrowed Books");
+            System.out.println("9. Back");
             System.out.print("Choose: ");
             try {
                 choice = Integer.parseInt(sc.nextLine());
@@ -46,12 +50,24 @@ public class BorrowMenu {
                         returnBook();
                         break;
                     case 3:
-                        displayTransactions(borrowService.getCurrentBorrowedBooks());
+                        viewBorrowedBooks();
                         break;
                     case 4:
                         borrowingHistory();
                         break;
                     case 5:
+                        extendDueDate();
+                        break;
+                    case 6:
+                        cancelBorrowing();
+                        break;
+                    case 7:
+                        getBooksNearDueDate();
+                        break;
+                    case 8:
+                        returnAllBorrowedBooks();
+                        break;
+                    case 9:
                         break;
                     default:
                         System.out.println("Invalid option.");
@@ -60,106 +76,229 @@ public class BorrowMenu {
                 System.out.println("Fail: " + e.getMessage());
             }
 
-        } while (choice != 5);
+        } while (choice != 9);
     }
 
-    private void borrowBook() throws Exception {
-        System.out.println("----------- BORROW BOOK -----------");
-        String memberID = Validation.inputRequired(sc, "MemberID: ", "Member ID").toUpperCase();
-        if (!Validation.isValidID(memberID)) {
-            throw new Exception("Member ID Invalid.");
-        }
-        String bookID = Validation.inputRequired(sc, "BookID: ", "Book ID").toUpperCase();
-        if (!Validation.checkBookID(bookID)) {
-            throw new Exception("Book ID Invalid.");
-        }
-
-        LocalDate borrowDate = DateUtils.parseDate(Validation.inputRequired(sc,
-                "Borrow Date (DD/MM/YYYY): ",
-                "Borrow Date"));
-        System.out.print("[1] Confirm [2] Cancel: ");
-        String confirm = sc.nextLine();
-
-        if (confirm.equals("1")) {
-            // Lấy thông tin trước để hiển thị theo đúng format của đề bài
-            Book book = borrowService.findByBookID(bookID);
-            Member member = borrowService.findByMemberID(memberID);
-
-            borrowService.borrowBook(memberID, bookID, borrowDate);
-
-            System.out.printf("Output: Book '%s' borrowed by '%s' successfully.\n",
-                    book.getTitle(), member.getName());
-        } else {
-            System.out.println("Cancelled.");
-        }
-    }
-
-    private void returnBook() throws Exception {
-        System.out.println("----------- RETURN BOOK -----------");
-        String memberID = Validation.inputRequired(sc, "MemberID: ", "Member ID").toUpperCase();
-        if (!Validation.isValidID(memberID)) {
-            throw new Exception("Member ID Invalid.");
-        }
-        String bookID = Validation.inputRequired(sc, "BookID: ", "Book ID").toUpperCase();
-        if (!Validation.checkBookID(bookID)) {
-            throw new Exception("Book ID Invalid.");
-        }
-
-        LocalDate returnDate = DateUtils.parseDate(Validation.inputRequired(sc,
-                "Return Date (DD/MM/YYYY): ",
-                "Return Date"));
-
-        System.out.print("[1] Confirm [2] Cancel: ");
-        String confirm = sc.nextLine();
-
-        if (confirm.equals("1")) {
-            Book book = borrowService.findByBookID(bookID);
-            Member member = borrowService.findByMemberID(memberID);
-
-            double fine = borrowService.returnBook(memberID, bookID, returnDate);
-
-            if (fine > 0) {
-                System.out.printf("Output: Book '%s' returned by '%s'. Overdue fine: %.0f VND.\n",
-                        book.getTitle(), member.getName(), fine);
-            } else {
-                System.out.printf("Output: Book '%s' returned by '%s'. No overdue fine.\n",
-                        book.getTitle(), member.getName());
+    // case 1
+    private void borrowBook() {
+        try {
+            System.out.println("----------- BORROW BOOK -----------");
+            String memberID = Validation.inputRequired(sc, "MemberID: ", "Member ID").toUpperCase();
+            if (!Validation.isValidID(memberID)) {
+                throw new Exception("Member ID Invalid.");
             }
-        } else {
-            System.out.println("Cancelled.");
+            String bookID = Validation.inputRequired(sc, "BookID: ", "Book ID").toUpperCase();
+            if (!Validation.checkBookID(bookID)) {
+                throw new Exception("Book ID Invalid.");
+            }
+
+            LocalDate borrowDate = DateUtils.parseDate(Validation.inputRequired(sc,
+                    "Borrow Date (DD/MM/YYYY): ",
+                    "Borrow Date"));
+            System.out.print("[1] Confirm [2] Cancel: ");
+            String confirm = sc.nextLine();
+
+            if (confirm.equals("1")) {
+                // Lấy thông tin trước để hiển thị theo đúng format của đề bài
+                Book book = borrowService.findByBookID(bookID);
+                Member member = borrowService.findByMemberID(memberID);
+
+                borrowService.borrowBook(memberID, bookID, borrowDate);
+
+                System.out.printf("Output: Book '%s' borrowed by '%s' successfully.\n",
+                        book.getTitle(), member.getName());
+            } else {
+                System.out.println("Cancelled.");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
-    }
-
-    public void displayTransactions(ArrayList<BorrowingTransaction> transactions) {
-        System.out.println("----------- TRANSACTION LIST -----------");
-        System.out.printf("%-8s %-8s %-8s %-12s %-12s %-15s %-10s %-8s\n",
-                "TID", "BookID", "MemID", "Borrow", "Due", "Return", "Fine", "Returned");
-        System.out.println("------------------------------------------------------------------------------------------");
-
-        for (BorrowingTransaction t : transactions) {
-            t.displayTransaction();
-        }
-
         System.out.print("Press ENTER to return...");
         sc.nextLine();
     }
 
-    private void borrowingHistory() throws Exception {
-        String memberID = Validation.inputRequired(sc, "MemberID: ", "Member ID").toUpperCase();
-        if (!Validation.isValidID(memberID)) {
-            throw new Exception("Member ID Invalid.");
+    // case 2
+    private void returnBook() {
+        System.out.println("----------- RETURN BOOK -----------");
+        try {
+            String memberID = Validation.inputRequired(sc, "MemberID: ", "Member ID").toUpperCase();
+            if (!Validation.isValidID(memberID)) {
+                throw new Exception("Member ID Invalid.");
+            }
+            String bookID = Validation.inputRequired(sc, "BookID: ", "Book ID").toUpperCase();
+            if (!Validation.checkBookID(bookID)) {
+                throw new Exception("Book ID Invalid.");
+            }
+
+            LocalDate returnDate = DateUtils.parseDate(Validation.inputRequired(sc,
+                    "Return Date (DD/MM/YYYY): ",
+                    "Return Date"));
+
+            System.out.print("[1] Confirm [2] Cancel: ");
+            String confirm = sc.nextLine();
+
+            if (confirm.equals("1")) {
+                Book book = borrowService.findByBookID(bookID);
+                Member member = borrowService.findByMemberID(memberID);
+
+                double fine = borrowService.returnBook(memberID, bookID, returnDate);
+
+                if (fine > 0) {
+                    System.out.printf("Output: Book '%s' returned by '%s'. Overdue fine: %.0f VND.\n",
+                            book.getTitle(), member.getName(), fine);
+                } else {
+                    System.out.printf("Output: Book '%s' returned by '%s'. No overdue fine.\n",
+                            book.getTitle(), member.getName());
+                }
+            } else {
+                System.out.println("Cancelled.");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
+        System.out.print("Press ENTER to return...");
+        sc.nextLine();
+    }
+
+    //case 3
+    public void viewBorrowedBooks() {
 
         try {
-            displayTransactions(borrowService.getBorrowingHistory(memberID));
+         
+            ArrayList<BorrowingTransaction> result = borrowService.getCurrentBorrowedBooks();
+            displayTransactionHeader();
+            for (BorrowingTransaction t : result) {
+                t.displayTransaction();
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        System.out.print("Press ENTER to return...");
+        sc.nextLine();
+    }
+
+    //case 4
+    private void borrowingHistory() {
+
+        try {
+            String memberID = Validation.inputRequired(sc, "MemberID: ", "Member ID").toUpperCase();
+            if (!Validation.isValidID(memberID)) {
+                throw new Exception("Member ID Invalid.");
+            }
+            
+            ArrayList<BorrowingTransaction> result = borrowService.getBorrowingHistory(memberID);
+            displayTransactionHeader();
+            for (BorrowingTransaction t : result) {
+                t.displayTransaction();
+            }
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        System.out.print("Press ENTER to return...");
+        sc.nextLine();
+    }
+
+    // case 5
+    private void extendDueDate() {
+
+        try {
+            String memberID = Validation.inputRequired(sc, "Member ID: ", "Member ID ");
+            if (!Validation.isValidID(memberID)) {
+                throw new Exception("Member ID Invalid.");
+            }
+            String bookID = Validation.inputRequired(sc, "Book ID: ", "Book ID ");
+            if (!Validation.checkBookID(bookID)) {
+                throw new Exception("Book ID Invalid.");
+            }
+            int extraDays = Integer.parseInt(Validation.inputRequired(sc, "Extra Day: ", "Extra day "));
+            LocalDate newDueDate = borrowService.extendDueDate(memberID, bookID, extraDays);
+            System.out.println("Extend due date successfully.");
+            System.out.println("New due date: " + DateUtils.formatDate(newDueDate));
+            double fee = borrowService.getFeeExtendDueDate(memberID, extraDays);
+            System.out.println("Extension fee: " + fee + " VND");
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        System.out.print("Press ENTER to return...");
+        sc.nextLine();
+    }
+
+    //case 6
+    private void cancelBorrowing() {
+        try {
+            String memberID = Validation.inputRequired(sc, "Member ID: ", "Member ID ");
+            if (!Validation.isValidID(memberID)) {
+                throw new Exception("Member ID Invalid.");
+            }
+            String bookID = Validation.inputRequired(sc, "Book ID: ", "Book ID ");
+            if (!Validation.checkBookID(bookID)) {
+                throw new Exception("Book ID Invalid.");
+            }
+            borrowService.cancelBorrowing(memberID, bookID);
+            System.out.println("Cancel successfully.");
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        System.out.print("Press ENTER to return...");
+        sc.nextLine();
+    }
+
+    //case 7
+    private void getBooksNearDueDate() {
+        try {
+            ArrayList<BorrowingTransaction> result = borrowService.getBooksNearDueDate();
+            displayTransactionHeader();
+            for (BorrowingTransaction t : result) {
+                t.displayTransaction();
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        System.out.print("Press ENTER to return...");
+        sc.nextLine();
+    }
+
+    //case 8
+    private void returnAllBorrowedBooks() {
+        try {
+            String memberID = Validation.inputRequired(sc, "Member ID: ", "Member ID ");
+            if (!Validation.isValidID(memberID)) {
+                throw new Exception("Member ID Invalid.");
+            }
+            LocalDate returnDate = DateUtils.parseDate(Validation.inputRequired(sc, "Return Date (DD/MM/YYYY): ", "Return Date "));
+            ArrayList<BorrowingTransaction> listBooks = borrowService.returnAllBorrowedBooks(memberID, returnDate);
+            displayTransactionHeader();
+            for (BorrowingTransaction t : listBooks) {
+
+                t.displayTransaction();
+            }
+            System.out.println("Return all borrowed books successfully.");
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+
+        }
+        System.out.print("Press ENTER to return...");
+        sc.nextLine();
     }
 
     public void displayBookHeader() {
         System.out.printf("%-6s %-25s %-22s %-17s %-6s %-4s\n",
                 "ID", "Title", "Author", "Genre", "PublicYear", "Quantity");
         System.out.println("-----------------------------------------------------------------------");
+    }
+
+    public void displayTransactionHeader() {
+        System.out.println("----------- TRANSACTION LIST -----------");
+        System.out.printf("%-8s %-8s %-8s %-12s %-12s %-15s %-10s %-8s\n",
+                "TID", "BookID", "MemID", "Borrow", "Due", "Return", "Fine", "Returned");
+        System.out.println("------------------------------------------------------------------------------------------");
     }
 }

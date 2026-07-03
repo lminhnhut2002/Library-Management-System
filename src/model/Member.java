@@ -60,6 +60,7 @@ public abstract class Member {
 
     public abstract String getType();
     public abstract int getNumberDaysBorrow();
+    public abstract double getFeeExtendDueDate(int extraDays);
     
     public String toFileString() {
     return getType() + "|" + memberID + "|" + name + "|" + phone + "|" + email;

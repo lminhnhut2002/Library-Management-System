@@ -25,4 +25,9 @@ public class RegularMember extends Member {
     public String getType() {
         return "Regular";
     }
+
+    @Override
+    public double getFeeExtendDueDate(int extraDays) {
+        return extraDays * 5000;
+    }
 }

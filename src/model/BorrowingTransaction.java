@@ -29,6 +29,11 @@ public class BorrowingTransaction {
         this.returned = false;
     }
 
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+    
+
     public BorrowingTransaction(String transactionID, String bookID, String memberID,
             LocalDate borrowDate, LocalDate dueDate, LocalDate returnDate,
             double fine, boolean returned) {
