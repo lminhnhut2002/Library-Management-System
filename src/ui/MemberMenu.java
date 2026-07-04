@@ -71,7 +71,7 @@ public class MemberMenu {
     private void addMember() throws Exception {
         System.out.println("----------- ADD MEMBER -----------");
         System.out.print("Member ID: ");
-        String id = sc.nextLine();
+        String id = sc.nextLine().toUpperCase();
         System.out.print("Name: ");
         String name = sc.nextLine();
         System.out.print("Phone: ");
@@ -105,7 +105,7 @@ public class MemberMenu {
     private void updateMember() throws Exception {
         System.out.println("----------- UPDATE MEMBER -----------");
         System.out.print("Enter Member ID: ");
-        String id = sc.nextLine();
+        String id = sc.nextLine().toUpperCase();
 
         Member m = memberService.findByID(id);
         if (m == null) {

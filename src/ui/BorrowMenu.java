@@ -33,7 +33,8 @@ public class BorrowMenu {
             System.out.println("6. Cancel Book Borrowing");
             System.out.println("7. Books Near Due Date");
             System.out.println("8. Return All Borrowed Books");
-            System.out.println("9. Back");
+            System.out.println("9. View All Transaction");
+            System.out.println("10. Back");
             System.out.print("Choose: ");
             try {
                 choice = Integer.parseInt(sc.nextLine());
@@ -68,6 +69,8 @@ public class BorrowMenu {
                         returnAllBorrowedBooks();
                         break;
                     case 9:
+                        viewAllTransactions();
+                    case 10:
                         break;
                     default:
                         System.out.println("Invalid option.");
@@ -76,7 +79,7 @@ public class BorrowMenu {
                 System.out.println("Fail: " + e.getMessage());
             }
 
-        } while (choice != 9);
+        } while (choice != 10);
     }
 
     // case 1
@@ -166,7 +169,7 @@ public class BorrowMenu {
     public void viewBorrowedBooks() {
 
         try {
-         
+
             ArrayList<BorrowingTransaction> result = borrowService.getCurrentBorrowedBooks();
             displayTransactionHeader();
             for (BorrowingTransaction t : result) {
@@ -188,7 +191,7 @@ public class BorrowMenu {
             if (!Validation.isValidID(memberID)) {
                 throw new Exception("Member ID Invalid.");
             }
-            
+
             ArrayList<BorrowingTransaction> result = borrowService.getBorrowingHistory(memberID);
             displayTransactionHeader();
             for (BorrowingTransaction t : result) {
@@ -284,6 +287,21 @@ public class BorrowMenu {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
 
+        }
+        System.out.print("Press ENTER to return...");
+        sc.nextLine();
+    }
+
+    //case 9
+    private void viewAllTransactions() {
+        try {
+            ArrayList<BorrowingTransaction> result = borrowService.getAllTransactions();
+            displayTransactionHeader();
+            for (BorrowingTransaction t : result) {
+                t.displayTransaction();
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
         System.out.print("Press ENTER to return...");
         sc.nextLine();

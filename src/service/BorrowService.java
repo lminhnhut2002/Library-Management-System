@@ -284,6 +284,12 @@ public class BorrowService {
 
         return listBooks;
     }
-
+// case 9
+    public ArrayList<BorrowingTransaction> getAllTransactions() throws Exception{
+        if(transactions.isEmpty()){
+            throw new Exception("No borrowing transactions found.");
+        }
+        return transactions;
+    }
    
 }
