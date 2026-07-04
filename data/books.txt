@@ -1,4 +1,4 @@
-B001|Clean Code|Robert C. Martin|Programming|2008|5|1
+B001|Clean Code|Robert C. Martin|Programming|2008|4|2
 B002|Effective Java|Joshua Bloch|Programming|2018|3|1
 B003|The Pragmatic Programmer|Andrew Hunt|Programming|1999|0|3
 B004|Design Patterns|Erich Gamma|Software|1994|2|0
