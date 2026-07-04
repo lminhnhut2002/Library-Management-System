@@ -5,6 +5,10 @@ import java.util.Scanner;
 import model.Book;
 import model.Member;
 import model.BorrowingTransaction;
+import repository.BookRepository;
+import repository.MemberRepository;
+import repository.BorrowRepository;
+import repository.ReportRepository;
 import service.BookService;
 import service.MemberService;
 import service.BorrowService;
@@ -19,20 +23,35 @@ public class MainMenu {
     private ArrayList<Member> members;
     private ArrayList<BorrowingTransaction> transactions;
 
+    // Repository
+    private BookRepository bookRepository;
+    private MemberRepository memberRepository;
+    private BorrowRepository borrowRepository;
+    private ReportRepository reportRepository;
+
+    // Service
     private BookService bookService;
     private MemberService memberService;
     private BorrowService borrowService;
     private ReportService reportService;
 
     public MainMenu() {
+
         books = FileUtils.loadBooks();
         members = FileUtils.loadMembers();
         transactions = FileUtils.loadTransactions();
 
-        bookService = new BookService(books);
-        memberService = new MemberService(members);
-        borrowService = new BorrowService(books, members, transactions);
-        reportService = new ReportService(books, members, transactions);
+        // Repository
+        bookRepository = new BookRepository(books);
+        memberRepository = new MemberRepository(members);
+        borrowRepository = new BorrowRepository(transactions);
+        reportRepository = new ReportRepository(books, members, transactions);
+
+        // Service
+        bookService = new BookService(bookRepository);
+        memberService = new MemberService(memberRepository);
+        borrowService = new BorrowService(bookRepository, memberRepository, borrowRepository);
+        reportService = new ReportService(reportRepository);
     }
 
     public void show() {
@@ -61,21 +80,26 @@ public class MainMenu {
                     new BookMenu(sc, bookService, borrowService).show();
                     saveData();
                     break;
+
                 case 2:
                     new MemberMenu(sc, memberService, borrowService).show();
                     saveData();
                     break;
+
                 case 3:
                     new BorrowMenu(sc, borrowService).show();
                     saveData();
                     break;
+
                 case 4:
-                    new ReportMenu(sc, reportService, borrowService).show(); // Thêm borrowService vào đây
+                    new ReportMenu(sc, reportService, borrowService).show();
                     break;
+
                 case 5:
                     saveData();
                     System.out.println("Data saved. Goodbye!");
                     break;
+
                 default:
                     System.out.println("Invalid option.");
             }

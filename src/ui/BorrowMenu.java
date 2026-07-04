@@ -70,6 +70,7 @@ public class BorrowMenu {
                         break;
                     case 9:
                         viewAllTransactions();
+                        break;
                     case 10:
                         break;
                     default:
@@ -103,8 +104,8 @@ public class BorrowMenu {
 
             if (confirm.equals("1")) {
                 // Lấy thông tin trước để hiển thị theo đúng format của đề bài
-                Book book = borrowService.findByBookID(bookID);
-                Member member = borrowService.findByMemberID(memberID);
+                Book book = borrowService.findBookByID(bookID);
+                Member member = borrowService.findMemberByID(memberID);
 
                 borrowService.borrowBook(memberID, bookID, borrowDate);
 
@@ -142,8 +143,8 @@ public class BorrowMenu {
             String confirm = sc.nextLine();
 
             if (confirm.equals("1")) {
-                Book book = borrowService.findByBookID(bookID);
-                Member member = borrowService.findByMemberID(memberID);
+                Book book = borrowService.findBookByID(bookID);
+                Member member = borrowService.findMemberByID(memberID);
 
                 double fine = borrowService.returnBook(memberID, bookID, returnDate);
 
@@ -168,17 +169,17 @@ public class BorrowMenu {
     //case 3
     public void viewBorrowedBooks() {
 
-        try {
+        ArrayList<BorrowingTransaction> result = borrowService.getCurrentBorrowedBooks();
 
-            ArrayList<BorrowingTransaction> result = borrowService.getCurrentBorrowedBooks();
+        if (result.isEmpty()) {
+            System.out.println("No borrowed books found.");
+        } else {
             displayTransactionHeader();
             for (BorrowingTransaction t : result) {
                 t.displayTransaction();
             }
-
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
         }
+
         System.out.print("Press ENTER to return...");
         sc.nextLine();
     }
@@ -305,12 +306,6 @@ public class BorrowMenu {
         }
         System.out.print("Press ENTER to return...");
         sc.nextLine();
-    }
-
-    public void displayBookHeader() {
-        System.out.printf("%-6s %-25s %-22s %-17s %-6s %-4s\n",
-                "ID", "Title", "Author", "Genre", "PublicYear", "Quantity");
-        System.out.println("-----------------------------------------------------------------------");
     }
 
     public void displayTransactionHeader() {

@@ -68,101 +68,112 @@ public class MemberMenu {
         } while (choice != 6);
     }
 
+    //case 1
     private void addMember() throws Exception {
         System.out.println("----------- ADD MEMBER -----------");
-        System.out.print("Member ID: ");
-        String id = sc.nextLine().toUpperCase();
-        System.out.print("Name: ");
-        String name = sc.nextLine();
-        System.out.print("Phone: ");
-        String phone = sc.nextLine();
-        System.out.print("Email: ");
-        String email = sc.nextLine();
 
+        String memberID = Validation.inputRequired(sc, "Member ID: ", "Member ID").toUpperCase();
+        if (!Validation.isValidID(memberID)) {
+            throw new Exception("Invalid Member ID.");
+        }
+        String name = Validation.inputRequired(sc, "Name: ", "Name");
+        String phone = Validation.inputRequired(sc, "Phone: ", "Phone");
         if (!Validation.isValidPhone(phone)) {
             throw new Exception("Phone must have 9-11 digits.");
         }
-
+        String email = Validation.inputRequired(sc, "Email: ", "Email");
         if (!Validation.isValidEmail(email)) {
             throw new Exception("Invalid email.");
         }
-
-        System.out.println("Type: 1. Regular  2. Premium");
-        System.out.print("Choose: ");
-        int type = Integer.parseInt(sc.nextLine());
-
-        Member member;
-        if (type == 2) {
-            member = new PremiumMember(id, name, phone, email);
-        } else {
-            member = new RegularMember(id, name, phone, email);
+        System.out.println("Type:");
+        System.out.println("1. Regular");
+        System.out.println("2. Premium");
+        int type = Integer.parseInt(
+                Validation.inputRequired(sc, "Choose: ", "Type"));
+        if (type != 1 && type != 2) {
+            throw new Exception("Type must be 1 or 2.");
         }
-
+        Member member;
+        if (type == 1) {
+            member = new RegularMember(memberID, name, phone, email);
+        } else {
+            member = new PremiumMember(memberID, name, phone, email);
+        }
         memberService.addMember(member);
         System.out.println("Member added successfully.");
     }
+// case 2
 
     private void updateMember() throws Exception {
         System.out.println("----------- UPDATE MEMBER -----------");
-        System.out.print("Enter Member ID: ");
-        String id = sc.nextLine().toUpperCase();
-
-        Member m = memberService.findByID(id);
-        if (m == null) {
+        String memberID = Validation.inputRequired(sc, "Member ID: ", "Member ID").toUpperCase();
+        if (!Validation.isValidID(memberID)) {
+            throw new Exception("Invalid Member ID.");
+        }
+        Member member = memberService.findByID(memberID);
+        if (member == null) {
             throw new Exception("Member not found.");
         }
-
         System.out.println("Current Information:");
-        System.out.println("Name: " + m.getName());
-        System.out.println("Phone: " + m.getPhone());
-        System.out.println("Email: " + m.getEmail());
+        displayHeader();
+        member.displayInfo();
         System.out.println("(Leave blank and press ENTER to skip updating that field)");
-
         System.out.print("New Name: ");
         String name = sc.nextLine();
-
         System.out.print("New Phone: ");
         String phone = sc.nextLine();
-
         System.out.print("New Email: ");
         String email = sc.nextLine();
-
         System.out.print("[1] Update [2] Cancel: ");
         String confirm = sc.nextLine();
-
         if (confirm.equals("1")) {
-            memberService.updateMember(id, name, phone, email);
+            memberService.updateMember(memberID, name, phone, email);
             System.out.println("Member updated successfully.");
         } else {
             System.out.println("Cancelled.");
         }
     }
+    // case3
 
     private void removeMember() throws Exception {
         System.out.println("----------- REMOVE MEMBER -----------");
-        System.out.print("Enter Member ID: ");
-        String id = sc.nextLine();
-
-        if (borrowService.countCurrentBorrowedBooks(id) > 0) {
+        String memberID = Validation.inputRequired(sc, "Member ID: ", "Member ID").toUpperCase();
+        if (!Validation.isValidID(memberID)) {
+            throw new Exception("Invalid Member ID.");
+        }
+        Member member = memberService.findByID(memberID);
+        if (member == null) {
+            throw new Exception("Member not found.");
+        }
+        if (borrowService.countCurrentBorrowedBooks(memberID) > 0) {
             throw new Exception("Cannot remove. Member has outstanding borrowed books.");
         }
-
-        memberService.removeMember(id);
+        memberService.removeMember(memberID);
         System.out.println("Member removed successfully.");
     }
+    //case 4
 
     private void searchMember() {
-        System.out.print("Enter member name or ID: ");
-        String keyword = sc.nextLine();
-        displayMembers(memberService.searchMembers(keyword));
+        try {
+            String keyword = Validation.inputRequired(
+                    sc,
+                    "Enter member name or ID: ",
+                    "Keyword");
+            displayMembers(memberService.searchMembers(keyword));
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     public void displayMembers(ArrayList<Member> members) {
         System.out.println("----------- MEMBER LIST -----------");
         displayHeader();
-
-        for (Member m : members) {
-            m.displayInfo();
+        if (members.isEmpty()) {
+            System.out.println("No members found.");
+        } else {
+            for (Member m : members) {
+                m.displayInfo();
+            }
         }
 
         System.out.print("Press ENTER to return...");
