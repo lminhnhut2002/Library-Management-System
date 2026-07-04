@@ -91,11 +91,22 @@ public class BorrowMenu {
             if (!Validation.isValidID(memberID)) {
                 throw new Exception("Member ID Invalid.");
             }
+
+            Member member = borrowService.findMemberByID(memberID);
+            if (member == null) {
+                throw new Exception("Member not found.");
+            }
             String bookID = Validation.inputRequired(sc, "BookID: ", "Book ID").toUpperCase();
             if (!Validation.checkBookID(bookID)) {
                 throw new Exception("Book ID Invalid.");
             }
-
+            Book book = borrowService.findBookByID(bookID);
+            if (book == null) {
+                throw new Exception("Book not found.");
+            }
+            if (!book.isAvailable()) {
+                throw new Exception("Out of stock.");
+            }
             LocalDate borrowDate = DateUtils.parseDate(Validation.inputRequired(sc,
                     "Borrow Date (DD/MM/YYYY): ",
                     "Borrow Date"));
@@ -103,9 +114,6 @@ public class BorrowMenu {
             String confirm = sc.nextLine();
 
             if (confirm.equals("1")) {
-                // Lấy thông tin trước để hiển thị theo đúng format của đề bài
-                Book book = borrowService.findBookByID(bookID);
-                Member member = borrowService.findMemberByID(memberID);
 
                 borrowService.borrowBook(memberID, bookID, borrowDate);
 
@@ -130,9 +138,18 @@ public class BorrowMenu {
             if (!Validation.isValidID(memberID)) {
                 throw new Exception("Member ID Invalid.");
             }
+
+            Member member = borrowService.findMemberByID(memberID);
+            if (member == null) {
+                throw new Exception("Member not found.");
+            }
             String bookID = Validation.inputRequired(sc, "BookID: ", "Book ID").toUpperCase();
             if (!Validation.checkBookID(bookID)) {
                 throw new Exception("Book ID Invalid.");
+            }
+            Book book = borrowService.findBookByID(bookID);
+            if (book == null) {
+                throw new Exception("Book not found.");
             }
 
             LocalDate returnDate = DateUtils.parseDate(Validation.inputRequired(sc,
@@ -143,8 +160,6 @@ public class BorrowMenu {
             String confirm = sc.nextLine();
 
             if (confirm.equals("1")) {
-                Book book = borrowService.findBookByID(bookID);
-                Member member = borrowService.findMemberByID(memberID);
 
                 double fine = borrowService.returnBook(memberID, bookID, returnDate);
 
@@ -192,7 +207,10 @@ public class BorrowMenu {
             if (!Validation.isValidID(memberID)) {
                 throw new Exception("Member ID Invalid.");
             }
-
+            Member member = borrowService.findMemberByID(memberID);
+            if (member == null) {
+                throw new Exception("Member not found.");
+            }
             ArrayList<BorrowingTransaction> result = borrowService.getBorrowingHistory(memberID);
             displayTransactionHeader();
             for (BorrowingTransaction t : result) {
@@ -200,7 +218,7 @@ public class BorrowMenu {
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
         System.out.print("Press ENTER to return...");
         sc.nextLine();
@@ -214,9 +232,17 @@ public class BorrowMenu {
             if (!Validation.isValidID(memberID)) {
                 throw new Exception("Member ID Invalid.");
             }
+            Member member = borrowService.findMemberByID(memberID);
+            if (member == null) {
+                throw new Exception("Member not found.");
+            }
             String bookID = Validation.inputRequired(sc, "Book ID: ", "Book ID ");
             if (!Validation.checkBookID(bookID)) {
                 throw new Exception("Book ID Invalid.");
+            }
+            Book book = borrowService.findBookByID(bookID);
+            if (book == null) {
+                throw new Exception("Book not found.");
             }
             int extraDays = Integer.parseInt(Validation.inputRequired(sc, "Extra Day: ", "Extra day "));
             LocalDate newDueDate = borrowService.extendDueDate(memberID, bookID, extraDays);
@@ -239,9 +265,17 @@ public class BorrowMenu {
             if (!Validation.isValidID(memberID)) {
                 throw new Exception("Member ID Invalid.");
             }
+            Member member = borrowService.findMemberByID(memberID);
+            if (member == null) {
+                throw new Exception("Member not found.");
+            }
             String bookID = Validation.inputRequired(sc, "Book ID: ", "Book ID ");
             if (!Validation.checkBookID(bookID)) {
                 throw new Exception("Book ID Invalid.");
+            }
+            Book book = borrowService.findBookByID(bookID);
+            if (book == null) {
+                throw new Exception("Book not found.");
             }
             borrowService.cancelBorrowing(memberID, bookID);
             System.out.println("Cancel successfully.");
@@ -275,6 +309,10 @@ public class BorrowMenu {
             String memberID = Validation.inputRequired(sc, "Member ID: ", "Member ID ");
             if (!Validation.isValidID(memberID)) {
                 throw new Exception("Member ID Invalid.");
+            }
+            Member member = borrowService.findMemberByID(memberID);
+            if (member == null) {
+                throw new Exception("Member not found.");
             }
             LocalDate returnDate = DateUtils.parseDate(Validation.inputRequired(sc, "Return Date (DD/MM/YYYY): ", "Return Date "));
             ArrayList<BorrowingTransaction> listBooks = borrowService.returnAllBorrowedBooks(memberID, returnDate);
@@ -314,4 +352,5 @@ public class BorrowMenu {
                 "TID", "BookID", "MemID", "Borrow", "Due", "Return", "Fine", "Returned");
         System.out.println("------------------------------------------------------------------------------------------");
     }
+
 }
